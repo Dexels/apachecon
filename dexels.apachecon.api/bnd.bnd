@@ -1,0 +1,4 @@
+Export-Package: dexels.apachecon.api
+Bundle-Version: 1.0.1
+-runfw: org.apache.felix.framework;version='[4.0.3,4.0.3]'
+-runee: JavaSE-1.6

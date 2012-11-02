@@ -1,0 +1,12 @@
+Service-Component: *
+-buildpath: osgi.core,\
+	osgi.cmpn,\
+	biz.aQute.bnd.annotation,\
+	junit.osgi,\
+	org.apache.felix.webconsole,\
+	javax.servlet;version=2.5.0.v200910301333
+Import-Package: org.apache.felix.webconsole,\
+	*
+Private-Package: dexels.apachecon
+
+Bundle-Version: 1.0.0

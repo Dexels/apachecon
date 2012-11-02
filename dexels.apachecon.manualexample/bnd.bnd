@@ -1,0 +1,13 @@
+Private-Package: org.example
+-runbundles: osgi.cmpn,\
+	org.apache.felix.scr,\
+	org.apache.felix.gogo.shell,\
+	org.apache.felix.gogo.command,\
+	org.apache.felix.gogo.runtime
+-runee: JavaSE-1.6
+Service-Component: *
+-runfw: org.apache.felix.framework
+-buildpath: osgi.core,\
+	osgi.cmpn,\
+	biz.aQute.bnd.annotation,\
+	junit.osgi

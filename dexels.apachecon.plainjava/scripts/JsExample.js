@@ -1,0 +1,1 @@
+result = input * 2

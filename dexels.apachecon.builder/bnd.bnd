@@ -1,0 +1,4 @@
+Import-Package: ,\
+	*
+Private-Package: dexels.apachecon
+Bundle-Version: 1.0.0

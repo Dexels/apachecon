@@ -1,0 +1,7 @@
+-buildpath: org.apache.felix.fileinstall,\
+	biz.aQute.bnd.annotation
+Import-Package: org.apache.felix.fileinstall,\
+	*
+Service-Component: *
+Export-Package: dexels.apachecon.fileinstall
+Bundle-Version: 1.0.0
