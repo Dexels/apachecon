@@ -20,7 +20,7 @@ public class WebConsoleExtension extends AbstractWebConsolePlugin implements Ser
 	private static final long serialVersionUID = -6801334928121243975L;
 	@Override
 	public String getLabel() {
-		return "Oempaloempa";
+		return "Oempaloeoempa";
 	}
 
 	@Override

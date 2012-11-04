@@ -1,4 +1,4 @@
-Private-Package: org.example
+Private-Package: dexels.apachecon
 -runbundles: osgi.cmpn,\
 	org.apache.felix.scr,\
 	org.apache.felix.gogo.shell,\
@@ -10,4 +10,7 @@ Service-Component: *
 -buildpath: osgi.core,\
 	osgi.cmpn,\
 	biz.aQute.bnd.annotation,\
-	junit.osgi
+	junit.osgi,\
+	dexels.apachecon.api;version=latest
+Import-Package: dexels.apachecon.api,\
+	*

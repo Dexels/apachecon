@@ -1,1 +1,1 @@
-result = input * 2
+result = 'I am a bundle. Input: '+input;
