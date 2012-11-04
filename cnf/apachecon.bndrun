@@ -1,0 +1,36 @@
+-runfw: org.apache.felix.framework;version='[4.0.3,4.0.3]'
+-runee: JavaSE-1.6
+
+## Uncomment if you need to change the HTTP port
+-runproperties: org.osgi.service.http.port=8080
+
+-runrequires: osgi.identity;filter:='(osgi.identity=dexels.apachecon.api)',\
+	osgi.identity;filter:='(osgi.identity=dexels.apachecon.builder)',\
+	osgi.identity;filter:='(osgi.identity=dexels.apachecon.fileinstall)',\
+	osgi.identity;filter:='(osgi.identity=dexels.apachecon.webconsole)',\
+	osgi.identity;filter:='(&(osgi.identity=slf4j.api)(version>=1.6.2))',\
+	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.log)(version>=1.0.1))',\
+	osgi.identity;filter:='(&(osgi.identity=org.apache.felix.metatype)(version>=1.0.4))',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.configadmin)',\
+	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.shell)',\
+	osgi.identity;filter:='(osgi.identity=dexels.apachecon.webconsole)'
+
+-runbundles: org.apache.felix.log;version='[1.0.1,1.0.2)',\
+	org.apache.felix.fileinstall;version='[3.2.4,3.2.5)',\
+	org.apache.felix.configadmin;version='[1.4.0,1.4.1)',\
+	javax.servlet;version='[2.5.0,2.5.1)',\
+	ch.qos.logback.classic;version='[1.0.0,1.0.1)',\
+	dexels.apachecon.builder;version='[1.0.0,1.0.1)',\
+	org.apache.felix.webconsole;version='[3.1.8,3.1.9)',\
+	dexels.apachecon.fileinstall;version='[1.0.0,1.0.1)',\
+	dexels.apachecon.api;version='[1.0.1,1.0.2)',\
+	ch.qos.logback.core;version='[1.0.0,1.0.1)',\
+	org.apache.felix.gogo.runtime;version='[0.10.0,0.10.1)',\
+	org.apache.felix.http.jetty;version='[2.2.0,2.2.1)',\
+	org.apache.felix.scr;version='[1.6.0,1.6.1)',\
+	slf4j.api;version='[1.6.2,1.6.3)',\
+	org.apache.felix.gogo.command;version='[0.12.0,0.12.1)',\
+	org.apache.felix.gogo.shell;version='[0.10.0,0.10.1)',\
+	dexels.apachecon.webconsole;version='[1.0.0,1.0.1)',\
+	org.apache.felix.metatype;version='[1.0.4,1.0.5)'
+-resolve: auto
