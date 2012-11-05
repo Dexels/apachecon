@@ -1,7 +1,8 @@
 -buildpath: org.apache.felix.fileinstall,\
-	biz.aQute.bnd.annotation
+	biz.aQute.bnd.annotation,\
+	osgi.cmpn;version=4.3.0.201111022214
 Import-Package: org.apache.felix.fileinstall,\
 	*
-Service-Component: *
 Export-Package: dexels.apachecon.fileinstall
 Bundle-Version: 1.0.0
+-dsannotations: *

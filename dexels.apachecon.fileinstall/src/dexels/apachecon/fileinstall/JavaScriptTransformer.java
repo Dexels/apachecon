@@ -1,9 +1,10 @@
 package dexels.apachecon.fileinstall;
 
 import java.io.File;
-import org.apache.felix.fileinstall.*;
 
-import aQute.bnd.annotation.component.Component;
+import org.apache.felix.fileinstall.ArtifactTransformer;
+import org.osgi.service.component.annotations.Component;
+
 
 @Component
 public class JavaScriptTransformer implements ArtifactTransformer {
