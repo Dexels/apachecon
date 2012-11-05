@@ -59,7 +59,7 @@ public class CustomClassLoader extends ClassLoader {
 	@Override
 	protected URL findResource(String res) {
     	String name = res.replaceAll("\\.", "/");
-    	logger.error("findResource not yet implemented: "+res+"\nor IS it?");
+    	logger.error("findResource not yet implemented: "+res);
     	try {
 //    		fileManager.getFo
 			JavaFileObject jfo = fileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, name, Kind.CLASS);

@@ -26,17 +26,20 @@ import javax.tools.ToolProvider;
 import org.apache.commons.io.IOUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Deactivate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import aQute.bnd.annotation.component.Activate;
-import aQute.bnd.annotation.component.Component;
+
 import dexels.apachecon.builder.osgicompiler.OSGiJavaCompiler;
 import dexels.apachecon.builder.osgicompiler.custom.CustomClassLoader;
 import dexels.apachecon.builder.osgicompiler.custom.CustomClassloaderJavaFileManager;
 import dexels.apachecon.builder.osgicompiler.custom.CustomJavaFileObject;
 
-@Component(immediate=true)
+@Component(immediate=true,configurationPolicy=ConfigurationPolicy.IGNORE)
 public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
 	
@@ -59,7 +62,6 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 	
 	@Activate
 	public void activateCompiler(BundleContext c) {
-		try {
 			logger.info("Activating java compiler.");
 			this.context = c; // c.getBundleContext();
 			compiler = ToolProvider.getSystemJavaCompiler();
@@ -79,12 +81,10 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			Dictionary<String, String> nsc = new Hashtable<String, String>();
 			nsc.put("type", "navajoScriptClassLoader");
 			this.customClassLoaderRegistration = this.context.registerService(ClassLoader.class, customClassLoader, nsc);
-		} catch (Throwable e) {
-			
-			e.printStackTrace();
-		}
+			logger.info("Java compiler online.");
 	}
 
+	@Deactivate
 	public void deactivate() {
 		logger.info("Deactivating java compiler");
 		try {

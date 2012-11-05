@@ -11,5 +11,5 @@ Export-Package: dexels.apachecon.builder,\
 	osgi.core;version=4.3.0,\
 	osgi.cmpn;version=4.3.0.201111022214,\
 	org.apache.commons.io,\
-	biz.aQute.bnd.annotation
-Service-Component: *
+	dexels.apachecon.api;version=latest
+-dsannotations: *

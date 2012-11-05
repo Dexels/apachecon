@@ -6,38 +6,30 @@ import java.io.Writer;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+
+@Component
 public class BuildComponent {
 	
 	private String getOutputPath() {
 		return "";
 	}
 	
-	private Writer getOutputWriter(String path, String packagePath, String scriptName,String extension) {
+	private Writer getOutputWriter(String path,  String scriptName,String extension) {
 		return null;
 	}
 	
-	private void generateFactoryClass(String script, String packagePath, Set<String> resources) throws IOException {
+	private void generateFactoryClass(String script, Set<String> resources) throws IOException {
 		
-		String javaPackagePath = packagePath.replaceAll("/", ".");
+		PrintWriter w = new PrintWriter(getOutputWriter(getOutputPath(),  script+"Factory", ".java"));
+		w.println("package script;");
 		
-		
-		PrintWriter w = new PrintWriter(getOutputWriter(getOutputPath(), packagePath, script+"Factory", ".java"));
-		if ("".equals(packagePath)) {
-			w.println("package defaultPackage;");
-		} else {
-			w.println("package "+javaPackagePath+";");
-		}
-		
-		w.println("import com.dexels.navajo.server.*;");
-		w.println("import com.dexels.navajo.mapping.*;");
 		w.println();
 		w.println("public class "+script+"Factory extends CompiledScriptFactory {");
 		w.println("	protected String getScriptName() {");
-		if ("".equals(packagePath)) {
-			w.println("		return \"defaultPackage."+ script+"\";");
-		} else {
-			w.println("		return \""+javaPackagePath+"."+ script+"\";");
-		}
+		w.println("		return \"script."+ script+"\";");
 		w.println("	}");
 		for (String res : resources) {
 			addResourceField(res, w);
@@ -73,9 +65,9 @@ public class BuildComponent {
 		w.println("}\n");
 	}
 
-	private void generateManifest(String description, String version, String packagePath, String script, Set<String> packages, String compileDate) throws IOException {
+	private void generateManifest(String description, String version,String script, Set<String> packages, String compileDate) throws IOException {
 		String symbolicName = "navajo.script."+description;
-		PrintWriter w = new PrintWriter(getOutputWriter(getOutputPath(), packagePath, script, ".MF"));
+		PrintWriter w = new PrintWriter(getOutputWriter(getOutputPath(), script, ".MF"));
 		
 		//		properties.getCompiledScriptPath(), pathPrefix, serviceName, ".java"
 		w.print("Manifest-Version: 1.0\r\n");
@@ -101,6 +93,7 @@ public class BuildComponent {
 			}
 			
 		}
+		// TODO Take care of scary MANIFEST restrictions (only 80 chars per line max, I think?)
 		w.print("Import-Package: "+sb.toString()+"\r\n");
 		w.print("Service-Component: OSGI-INF/script.xml\r\n");
 		w.print("\r\n");
@@ -108,21 +101,9 @@ public class BuildComponent {
 		w.close();
 	}
 	
-	private void generateDs(String packagePath, String script, Set<String> dependentResources) throws IOException {
+	private void generateDs(String script, Set<String> dependentResources) throws IOException {
 		
-		String fullName;
-		if (packagePath.equals("")) {
-			fullName = script;
-		} else {
-			fullName = packagePath+"/"+script;
-
-		}
-		String javaPackagePath;
-		if("".equals(packagePath)) {
-			javaPackagePath = "defaultPackage";
-		} else {
-			javaPackagePath = packagePath.replaceAll("/", ".");
-		}
+		String fullName = "script."+script;
 		String symbolicName = fullName.replaceAll("/", ".");
 		XMLElement xe = new CaseSensitiveXMLElement("scr:component");
 		xe.setAttribute("xmlns:scr", "http://www.osgi.org/xmlns/scr/v1.1.0");
@@ -132,7 +113,7 @@ public class BuildComponent {
 		xe.setAttribute("deactivate", "deactivate");
 		XMLElement implementation = new CaseSensitiveXMLElement("implementation");
 		xe.addChild(implementation);
-		implementation.setAttribute("class",javaPackagePath+"."+script+"Factory");
+		implementation.setAttribute("class","script."+script+"Factory");
 		XMLElement service = new CaseSensitiveXMLElement("service");
 		xe.addChild(service);
 		XMLElement provide = new CaseSensitiveXMLElement("provide");
@@ -154,18 +135,19 @@ public class BuildComponent {
 			dep.setAttribute("target", "(navajo.resource.name="+resource+")");
 			xe.addChild(dep);
 		}
-		PrintWriter w = new PrintWriter(getOutputWriter(getOutputPath(), packagePath, script, ".xml"));
+		PrintWriter w = new PrintWriter(getOutputWriter(getOutputPath(), script, ".xml"));
 		w.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		xe.write(w);
 		w.flush();
 		w.close();
 	}
 
-
+	@Activate
 	public void activate() {
 		System.err.println("Activating TSL compiler");
 	}
 	
+	@Deactivate
 	public void deactivate() {
 		System.err.println("Deactivating TSL compiler");
 	}
