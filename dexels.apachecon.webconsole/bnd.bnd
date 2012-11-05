@@ -1,15 +1,15 @@
-Service-Component: *
--buildpath: osgi.core,\
-	osgi.cmpn,\
-	biz.aQute.bnd.annotation,\
-	junit.osgi,\
+-buildpath: junit.osgi,\
 	org.apache.felix.webconsole,\
-	javax.servlet;version=2.5.0.v200910301333
+	javax.servlet;version=2.5.0.v200910301333,\
+	osgi.cmpn;version=4.3.0.201111022214,\
+	osgi.core;version=4.3.0,\
+	dexels.apachecon.api;version=latest
 Import-Package: org.apache.felix.webconsole,\
+	org.osgi.framework;version=1.6.0,\
 	*
 Private-Package: dexels.apachecon
 
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 -runfw: org.apache.felix.framework;version='[4.0.3,4.0.3]'
 -runee: JavaSE-1.6
 -runrepos: Local,\
@@ -28,8 +28,7 @@ Bundle-Version: 1.0.0
 	dexels.apachecon.api;version=latest,\
 	dexels.apachecon.builder;version=latest,\
 	dexels.apachecon.fileinstall;version=latest,\
-	dexels.apachecon.manualexample;version=latest,\
-	dexels.apachecon.webconsole;version=latest
+	dexels.apachecon.manualexample;version=latest
 -runrequires: osgi.identity;filter:='(osgi.identity=org.apache.felix.log)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.metatype)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.webconsole)',\
@@ -39,3 +38,4 @@ Bundle-Version: 1.0.0
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.command)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.gogo.runtime)',\
 	osgi.identity;filter:='(osgi.identity=org.apache.felix.scr)'
+-dsannotations: *
