@@ -45,6 +45,7 @@ import java.util.Vector;
 /**
  * XMLElement is a representation of an XML object. The object is able to parse
  * XML code.
+ * MODIFIED 
  * <P>
  * <DL>
  * <DT><B>Parsing XML Data</B></DT>

@@ -1,12 +1,15 @@
-Import-Package: org.slf4j.api,\
-	org.osgi.framework;version=1.5.0,\
+Import-Package: org.osgi.framework;version=1.5.0,\
+	org.apache.commons.io,\
 	*
 Private-Package: dexels.apachecon.builder.internal,\
 	dexels.apachecon.builder.osgicompiler.internal
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.1
 Export-Package: dexels.apachecon.builder,\
 	dexels.apachecon.builder.osgicompiler,\
 	dexels.apachecon.builder.osgicompiler.custom
 -buildpath: slf4j.api,\
 	osgi.core;version=4.3.0,\
-	osgi.cmpn;version=4.3.0.201111022214
+	osgi.cmpn;version=4.3.0.201111022214,\
+	org.apache.commons.io,\
+	biz.aQute.bnd.annotation
+Service-Component: *

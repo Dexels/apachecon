@@ -144,16 +144,6 @@ public class BuildComponent {
 		property.setAttribute("type", "String");
 		property.setAttribute("value", symbolicName);
 		
-//		for (Dependency dependency : dependencies) {
-//			XMLElement dep = new CaseSensitiveXMLElement("reference");
-//			dep.setAttribute("bind", "setDependency");
-//			dep.setAttribute("deptype", dependency.getType());
-//			dep.setAttribute("depId", dependency.getId());
-//			dep.setAttribute("depStamp", dependency.getCurrentTimeStamp());
-//			xe.addChild(dep);
-//			logger.debug("Dependency: "+dep.toString());
-//		}
-//		  <reference bind="setIOConfig" cardinality="1..1" interface="com.dexels.navajo.server.NavajoIOConfig" name="NavajoIOConfig" policy="dynamic" unbind="clearIOConfig"/>
 		for (String resource : dependentResources) {
 			XMLElement dep = new CaseSensitiveXMLElement("reference");
 			dep.setAttribute("bind", "set"+resource);
@@ -174,7 +164,6 @@ public class BuildComponent {
 
 	public void activate() {
 		System.err.println("Activating TSL compiler");
-//		compiler = new TslCompiler(classLoader, navajoIOConfig);
 	}
 	
 	public void deactivate() {

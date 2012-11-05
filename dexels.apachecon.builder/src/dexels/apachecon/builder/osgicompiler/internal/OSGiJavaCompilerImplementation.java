@@ -23,19 +23,20 @@ import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
+import org.apache.commons.io.IOUtils;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.ComponentContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import aQute.bnd.annotation.component.Activate;
+import aQute.bnd.annotation.component.Component;
 import dexels.apachecon.builder.osgicompiler.OSGiJavaCompiler;
 import dexels.apachecon.builder.osgicompiler.custom.CustomClassLoader;
 import dexels.apachecon.builder.osgicompiler.custom.CustomClassloaderJavaFileManager;
 import dexels.apachecon.builder.osgicompiler.custom.CustomJavaFileObject;
 
-
-
+@Component(immediate=true)
 public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 
 	
@@ -55,33 +56,33 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 		
 	}
 	
-	public void activateCompiler(ComponentContext c) {
-		logger.info("Activating java compiler.");
-		this.context = c.getBundleContext();
-		compiler = ToolProvider.getSystemJavaCompiler();
-		compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
+	
+	@Activate
+	public void activateCompiler(BundleContext c) {
+		try {
+			logger.info("Activating java compiler.");
+			this.context = c; // c.getBundleContext();
+			compiler = ToolProvider.getSystemJavaCompiler();
+			compilerOutputListener = new DiagnosticListener<JavaFileObject>() {
 
-			@Override
-			public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
-				logger.info("Problem in filemanager: "+diagnostic.getMessage(Locale.ENGLISH));
-			}
-		};
-		fileManager = compiler.getStandardFileManager(compilerOutputListener, null, null);
-		customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
-		this.customClassLoader = new CustomClassLoader(customJavaFileManager);
-		
-		this.fileManagerRegistration = this.context.registerService(JavaFileManager.class, customJavaFileManager, null);
-		
-//		(type=navajoScriptClassLoader)
-		Dictionary<String, String> nsc = new Hashtable<String, String>();
-		nsc.put("type", "navajoScriptClassLoader");
-		this.customClassLoaderRegistration = this.context.registerService(ClassLoader.class, customClassLoader, nsc);
-		// test the example, it shouldn't really be here, actually
-//		try {
-//			test();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+				@Override
+				public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
+					logger.info("Problem in filemanager: "+diagnostic.getMessage(Locale.ENGLISH));
+				}
+			};
+			fileManager = compiler.getStandardFileManager(compilerOutputListener, null, null);
+			customJavaFileManager = new CustomClassloaderJavaFileManager(context, getClass().getClassLoader(), fileManager);
+			this.customClassLoader = new CustomClassLoader(customJavaFileManager);
+			
+			this.fileManagerRegistration = this.context.registerService(JavaFileManager.class, customJavaFileManager, null);
+			
+			Dictionary<String, String> nsc = new Hashtable<String, String>();
+			nsc.put("type", "navajoScriptClassLoader");
+			this.customClassLoaderRegistration = this.context.registerService(ClassLoader.class, customClassLoader, nsc);
+		} catch (Throwable e) {
+			
+			e.printStackTrace();
+		}
 	}
 
 	public void deactivate() {

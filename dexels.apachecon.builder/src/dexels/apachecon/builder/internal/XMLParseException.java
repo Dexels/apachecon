@@ -31,6 +31,7 @@ package dexels.apachecon.builder.internal;
 /**
  * An XMLParseException is thrown when an error occures while parsing an XML
  * string.
+ * MODIFIED 
  * <P>
  * $Revision: 1.7 $<BR>
  * $Date: 2011/06/16 01:09:33 $
