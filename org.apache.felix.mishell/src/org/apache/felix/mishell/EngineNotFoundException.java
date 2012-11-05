@@ -18,6 +18,8 @@ package org.apache.felix.mishell;
 
 public class EngineNotFoundException extends Exception {
 
+	private static final long serialVersionUID = -7518174804695925408L;
+
 	public EngineNotFoundException(String language) {
 		super(language);
 	}

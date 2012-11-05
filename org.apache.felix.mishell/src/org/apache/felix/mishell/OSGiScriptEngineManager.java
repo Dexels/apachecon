@@ -212,6 +212,7 @@ public class OSGiScriptEngineManager extends ScriptEngineManager{
 	 * @return the names of the available ScriptEngineFactory classes
 	 * @throws IOException
 	 */
+	@SuppressWarnings("rawtypes")
 	private List<String> findFactoryCandidates(BundleContext context) throws IOException{
 		Bundle[] bundles = context.getBundles();
 		List<String> factoryCandidates = new ArrayList<String>();

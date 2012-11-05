@@ -1,0 +1,1 @@
+I copied the Felix trunk, removed the JMX stuff and the Maven build, I couldn't get either to work.

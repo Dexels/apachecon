@@ -18,15 +18,12 @@ package org.apache.felix.mishell.console;
 
 import java.io.PrintStream;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
-
-import javax.script.ScriptContext;
 
 
 
 public class Commander extends HashSet<Command> implements Command{
+	private static final long serialVersionUID = -2718708541039000242L;
 	private Logger log=Logger.getLogger(this.getClass().getName());
 	public void executeCommand(String cmd, PrintStream out) throws Exception {
 		String[] parsedCmd=cmd.split(" ");

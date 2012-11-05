@@ -18,4 +18,6 @@ package org.apache.felix.mishell.console;
 
 public class CommandNotFoundException extends Exception {
 
+	private static final long serialVersionUID = -5796829881175845291L;
+
 }
