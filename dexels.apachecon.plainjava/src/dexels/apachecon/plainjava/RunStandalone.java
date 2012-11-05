@@ -1,10 +1,10 @@
-package apachecon.js.example;
+package dexels.apachecon.plainjava;
 
 import java.io.IOException;
 
 import javax.script.ScriptException;
 
-import apachecon.Evaluator;
+import dexels.apachecon.api.Evaluator;
 
 public class RunStandalone {
 
