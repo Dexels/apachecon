@@ -4,16 +4,13 @@ import java.io.File;
 
 import org.apache.felix.fileinstall.ArtifactListener;
 import org.apache.felix.fileinstall.ArtifactTransformer;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dexels.apachecon.builder.BundleBuilder;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;;
 
 @Component(configurationPolicy=ConfigurationPolicy.IGNORE)
 public class RubyTransformer implements ArtifactTransformer, ArtifactListener {

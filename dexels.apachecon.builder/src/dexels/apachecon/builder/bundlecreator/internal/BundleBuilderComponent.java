@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -23,9 +22,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
@@ -46,6 +43,7 @@ public class BundleBuilderComponent implements BundleBuilder {
 	private String jarPath;
 	
 	private OSGiJavaCompiler compiler ;
+	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(BundleBuilderComponent.class);
 	@Reference
 	public void setCompiler(OSGiJavaCompiler c) {
@@ -276,7 +274,6 @@ public class BundleBuilderComponent implements BundleBuilder {
 
 	private File createBundleJar(String scriptPath,boolean keepIntermediateFiles, String extension) throws IOException {
 		String packagePath = "";
-		String script = null;
 		String fixOffset = "script"; //packagePath.equals("")?"defaultPackage":"";
 		File out = new File(outputPath);
 //		File out = new File(outB,fixOffset);
@@ -361,24 +358,24 @@ public class BundleBuilderComponent implements BundleBuilder {
 		}
 	}
 
-	private Bundle doInstall(BundleContext bundleContext, File bundleFile, boolean force) throws BundleException,FileNotFoundException, MalformedURLException {
-		final String uri = bundleFile.toURI().toURL().toString();
-		Bundle previous = bundleContext.getBundle(uri);
-		if(previous!=null) {
-			if (force) {
-				previous.uninstall();
-				logger.debug("uninstalling bundle with URI: "+uri);
-			} else {
-				logger.info("Skipping bundle at: "+uri+" as it is already installed. Lastmod: "+new Date(previous.getLastModified())+" status: "+previous.getState());
-				return null;
-			}
-		}
-		logger.info("Installing script: "+bundleFile.getName());
-		FileInputStream fis = new FileInputStream(bundleFile);
-		Bundle b;
-		b = bundleContext.installBundle(uri, fis);
-		b.start();
-		return b;
-	}
+//	private Bundle doInstall(BundleContext bundleContext, File bundleFile, boolean force) throws BundleException,FileNotFoundException, MalformedURLException {
+//		final String uri = bundleFile.toURI().toURL().toString();
+//		Bundle previous = bundleContext.getBundle(uri);
+//		if(previous!=null) {
+//			if (force) {
+//				previous.uninstall();
+//				logger.debug("uninstalling bundle with URI: "+uri);
+//			} else {
+//				logger.info("Skipping bundle at: "+uri+" as it is already installed. Lastmod: "+new Date(previous.getLastModified())+" status: "+previous.getState());
+//				return null;
+//			}
+//		}
+//		logger.info("Installing script: "+bundleFile.getName());
+//		FileInputStream fis = new FileInputStream(bundleFile);
+//		Bundle b;
+//		b = bundleContext.installBundle(uri, fis);
+//		b.start();
+//		return b;
+//	}
 
 }
