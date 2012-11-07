@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author atamur
  * @since 15-Oct-2009
  */
+
 public class CustomClassloaderJavaFileManager extends
 		ForwardingJavaFileManager<JavaFileManager> implements JavaFileManager,
 		BundleListener {
@@ -88,6 +89,7 @@ public class CustomClassloaderJavaFileManager extends
 		} else {
 			binaryName = binaryName + ".java";
 		}
+		
 		CustomJavaFileObject cjfo = fileMap.get(binaryName);
 		if (cjfo != null) {
 			return cjfo;
@@ -155,7 +157,6 @@ public class CustomClassloaderJavaFileManager extends
 			// }
 		}
 		return Collections.emptyList();
-
 	}
 
 	@Override

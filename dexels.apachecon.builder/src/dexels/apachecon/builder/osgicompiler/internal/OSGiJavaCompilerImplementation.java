@@ -82,7 +82,7 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			nsc.put("type", "navajoScriptClassLoader");
 			this.customClassLoaderRegistration = this.context.registerService(ClassLoader.class, customClassLoader, nsc);
 			logger.info("Java compiler online.");
-	}
+	} 
 
 	@Deactivate
 	public void deactivate() {
@@ -120,14 +120,13 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
 			};
 		CompilationTask task = compiler.getTask(null, customJavaFileManager, compilerOutputListener,new ArrayList<String>(), null, fileObjects);
 		task.call();
-		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, className, Kind.CLASS);
+		CustomJavaFileObject jfo = (CustomJavaFileObject) customJavaFileManager.getJavaFileForInput(StandardLocation.CLASS_OUTPUT, "script/"+className, Kind.CLASS);
 		if(jfo==null) {
-			logger.error("Compilation failed: \n"+sw.toString());
+			logger.error("Compilation failed: \n"+sw.toString() +" for compilation unit: "+className);
 			return null;
 		}
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		IOUtils.copy(jfo.openInputStream(),baos);
-		
 		return baos.toByteArray();
 	}
 	

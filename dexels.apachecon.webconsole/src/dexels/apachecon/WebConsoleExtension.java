@@ -101,8 +101,6 @@ public class WebConsoleExtension extends AbstractWebConsolePlugin implements Ser
 		} catch (InvalidSyntaxException e) {
 			throw new ServletException("Service failed", e);
 		}
-//		getBundleContext().g
-		
 	}
 
 }

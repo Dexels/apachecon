@@ -1,7 +1,9 @@
 -buildpath: org.apache.felix.fileinstall,\
-	biz.aQute.bnd.annotation,\
-	osgi.cmpn;version=4.3.0.201111022214
-Import-Package: org.apache.felix.fileinstall,\
+	slf4j.api,\
+	osgi.core;version=4.3.0,\
+	osgi.cmpn;version=4.3.0.201111022214,\
+	dexels.apachecon.builder;version=latest
+Import-Package: org.slf4j,\
 	*
 Export-Package: dexels.apachecon.fileinstall
 Bundle-Version: 1.0.0
