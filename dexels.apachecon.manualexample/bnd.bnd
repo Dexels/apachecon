@@ -6,9 +6,8 @@ Private-Package: dexels.apachecon
 	org.apache.felix.gogo.runtime
 -runee: JavaSE-1.6
 -runfw: org.apache.felix.framework
--buildpath: osgi.core,\
-	junit.osgi,\
-	dexels.apachecon.api;version=latest,\
+-buildpath: dexels.apachecon.billboard;version=latest,\
+	osgi.core;version=4.3.0,\
 	osgi.cmpn;version=4.3.0.201111022214
 Import-Package: dexels.apachecon.api,\
 	*

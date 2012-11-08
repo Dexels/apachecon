@@ -34,8 +34,8 @@
 	dexels.apachecon.api;version=latest,\
 	dexels.apachecon.builder;version=latest,\
 	dexels.apachecon.fileinstall;version=latest,\
-	dexels.apachecon.manualexample;version=latest,\
 	dexels.apachecon.webconsole;version=latest,\
 	org.apache.felix.mishell;version=latest,\
 	org.jruby.jruby,\
-	org.apache.servicemix.bundles.rhino
+	org.apache.servicemix.bundles.rhino,\
+	dexels.apachecon.billboard;version=latest
