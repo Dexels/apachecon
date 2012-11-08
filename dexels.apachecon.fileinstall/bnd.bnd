@@ -3,7 +3,8 @@
 	osgi.core;version=4.3.0,\
 	osgi.cmpn;version=4.3.0.201111022214,\
 	dexels.apachecon.builder;version=latest
-Import-Package: org.slf4j,\
+Import-Package: dexels.apachecon.api.annotation,\
+	org.slf4j,\
 	*
 Export-Package: dexels.apachecon.fileinstall
 Bundle-Version: 1.0.0

@@ -85,22 +85,16 @@ public class CustomJavaFileFolder {
 		}
 		boolean foundExportedPackage = false;
 		List<BundleCapability> sss = bw.getCapabilities("osgi.wiring.package");
-//			System.err.println("WIRES of bundle: "+b.getSymbolicName()+" # of wires: "+sss.size());
 			for (BundleCapability bundleWire : sss) {
-//				System.err.println("wire: "+bundleWire.getAttributes());
 				String exported = (String) bundleWire.getAttributes().get("osgi.wiring.package");
 				if(packageNameDot.equals(exported)) {
-//					System.err.println(">>>>> FOUND: "+exported);
 					foundExportedPackage = true;
 				}
-//				System.err.println("exp: "+exported+" pack: "+packageNameDot);
 			}
 			
 		if(!foundExportedPackage) {
-//			System.err.println("Package: "+packageNameDot+" is not found in package "+b.getSymbolicName());
 			return false;
 		}
-//		System.err.println("Package: "+packageNameDot+" IS found in package "+b.getSymbolicName());
 		Collection<String> cc = bw.listResources(packageName, null, BundleWiring.LISTRESOURCES_LOCAL);
 		boolean found = false;
 		for (String resource : cc) {

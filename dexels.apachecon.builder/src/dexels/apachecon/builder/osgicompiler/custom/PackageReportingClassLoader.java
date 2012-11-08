@@ -16,7 +16,6 @@ public class PackageReportingClassLoader extends ClassLoader {
 	@Override
 	protected Class<?> findClass(String name) throws ClassNotFoundException {
     	String packageName = getPackageName(name);
-//    	System.err.println("Package: "+packageName);
     	reportPackageName(packageName);
 		return super.findClass(name);
 	}

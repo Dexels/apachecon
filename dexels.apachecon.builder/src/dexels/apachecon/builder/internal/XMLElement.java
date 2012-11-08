@@ -973,21 +973,6 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	public int getOffset() {
-		// XMLElement next = getNextSibling();
-		// if (next!=null) {
-		// int ii = next.getStartOffset()-1;
-		// System.err.println("Element: "+getName()+"returning start of next
-		// element: "+next.getName()+":: "+ii);
-		// return ii;
-		// }
-		// if (parent!=null) {
-		// int ii = parent.getOffset()-1;
-		// System.err.println("Element: "+getName()+"returning end of parent
-		// element: "+parent.getName()+":: "+ii);
-		// return ii;
-		// }
-		// System.err.println("Element has no parent: "+getName()+"returning end
-		// of self: "+offset);
 		return this.offset;
 	}
 
@@ -2609,19 +2594,10 @@ public class XMLElement implements java.io.Serializable {
 					XMLElement child = this.createAnotherElement();
 					child.startOffset = offset - 2;
 					child.startLineNr = lineNr;
-					// System.err.println("Child offseT: "+offset);
-					// parseStack.push(child);
 					this.scanElement(child);
-					// System.err.println("Parsed. Child offseT: "+offset);
 					child.offset = offset;
-					// System.err.println("Child: "+child.startOffset+" -
-					// "+child.offset+" name: "+child.getName());
-					// elt.offset = child.getOffset();
 					child.lineNr = lineNr;
-					// System.err.println("child startline: "+
-					// child.startLineNr+" endline: "+child.lineNr);
 					elt.addChild(child);
-					// parseStack.pop();
 				}
 				ch = this.scanWhitespace();
 				if (ch != '<') {
@@ -2907,7 +2883,6 @@ public class XMLElement implements java.io.Serializable {
 	}
 
 	public XMLElement getNextSibling() {
-		// System.err.println("getNextSibling called, in XMLElement. This
 		// function is untested and should not be trusted.");
 		if (parent == null) {
 			return null;
@@ -2934,7 +2909,6 @@ public class XMLElement implements java.io.Serializable {
 				return;
 			}
 		}
-		System.err.println("WARNING: ELEMENT NOT FOUND!");
 	}
 
 	public String getNonNullStringAttribute(String attributeName) {

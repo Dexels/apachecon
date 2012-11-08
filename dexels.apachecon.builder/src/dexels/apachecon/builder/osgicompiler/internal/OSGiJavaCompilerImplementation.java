@@ -157,7 +157,9 @@ public class OSGiJavaCompilerImplementation implements OSGiJavaCompiler {
     private  JavaFileObject getJavaSourceFileObject(String className, InputStream contents) throws IOException
     {
         JavaFileObject so = null;
-            so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + className.replace('.', '/')
+            String replace = className.replace('.', '/');
+            replace = replace.replaceAll(" ", "%20");
+			so = new CustomJavaFileObject(className+ Kind.SOURCE.extension, URI.create("file:///" + replace
                     + Kind.SOURCE.extension), contents, Kind.SOURCE);
         return so;
     }

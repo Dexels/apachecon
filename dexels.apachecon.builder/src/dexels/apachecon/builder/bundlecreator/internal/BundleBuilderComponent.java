@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -51,12 +52,12 @@ public class BundleBuilderComponent implements BundleBuilder {
 	}
 	
 	@Override
-	public File build(String scriptName, String engine,String extension) throws IOException {
-		generateFactoryClass(scriptName,new HashSet<String>(),engine,extension);
+	public File build(String scriptName, String engine,String extension, Map<String,String> annotations) throws IOException {
+		generateFactoryClass(scriptName,annotations,engine,extension);
 		generateManifest(scriptName, "1.0.0", getDefaultPackages());
-		generateDs(scriptName, new HashSet<String>(), "dexels.apachecon.api.Evaluator");
+		generateDs(scriptName, annotations, "dexels.apachecon.api.Evaluator");
 		compileJava(scriptName);
-		File jarFile = createBundleJar(scriptName, false,extension);
+		File jarFile = createBundleJar(scriptName, true,extension);
 		return jarFile;
 	}
 
@@ -68,23 +69,19 @@ public class BundleBuilderComponent implements BundleBuilder {
 		scriptPath = "/Users/frank/git/apachecon/dexels.apachecon.script/script";
 		outputPath = "/Users/frank/git/apachecon/dexels.apachecon.script/tmp";
 		jarPath = "/Users/frank/git/apachecon/dexels.apachecon.script/jars";
-//		System.err.println("Activating BundleBuilder");
-//		try {
-//			File jarFile = build("RubyExample","ruby",".rb");
-//			doInstall(bc, jarFile, true);
-//			bc.installBundle(jarFile.toURI().toURL().toString());
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	private void compileJava(String scriptName) throws FileNotFoundException, IOException {
 		byte[] result = compiler.compile(scriptName, getJavaSource(scriptName));
 //		File output = new File(outputPath);
+		if(result==null) {
+			throw new IOException("Java compilation failed");
+		}
 		File outputFile = new File(outputPath, scriptName+".class");
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(outputFile);
+			// beware of spaces
 			IOUtils.copy(new ByteArrayInputStream(result),fos);
 		} finally {
 			if(fos!=null) {
@@ -138,7 +135,7 @@ public class BundleBuilderComponent implements BundleBuilder {
 //	}
 	
 	
-	private void generateFactoryClass(String script, Set<String> resources, String engine, String extension) throws IOException {
+	private void generateFactoryClass(String script, Map<String,String> annotations, String engine, String extension) throws IOException {
 		
 		PrintWriter w = new PrintWriter(getOutputWriter( script, ".java"));
 //		PrintWriter w = new PrintWriter(writer);
@@ -149,25 +146,25 @@ public class BundleBuilderComponent implements BundleBuilder {
 		w.println();
 		w.println("public class "+script+" extends BaseEvaluator implements Evaluator {");
 		w.println();
-		for (String res : resources) {
-			addResourceField(res, w);
+		for (Entry<String,String> res : annotations.entrySet()) {
+			addResourceField(res.getKey(),res.getValue(), w);
 		}
 		w.println();
 		w.println("  public "+script+"() {");
 		w.println("    super("+script+".class.getSimpleName(),\""+engine+"\",\""+extension+"\");");
 		w.println("  }");
 		w.println();
-		w.println("	protected String getScriptName() {");
+		w.println("	 protected String getScriptName() {");
 		w.println("		return \"script."+ script+"\";");
-		w.println("	}");
+		w.println("	 }");
 		w.println();
 //		w.println("	public void activate(BundleContext bc) {");
 //		w.println("	  super.activate(bc);");
 //		w.println("	}");
 
-		for (String res : resources) {
-			addResourceDependency(res, w,"set");
-			addResourceDependency(res, w,"clear");
+		for (Entry<String,String> res : annotations.entrySet()) {
+			addResourceDependency(res.getKey(),res.getValue(), w,true);
+			addResourceDependency(res.getKey(),res.getValue(), w,false);
 		}
 		w.println("");
 		
@@ -176,15 +173,18 @@ public class BundleBuilderComponent implements BundleBuilder {
 		w.close();
 		
 	}
-	private void addResourceField(String res, PrintWriter w) {
-		w.println("private Object _"+res+";");
+	private void addResourceField(String resourceName, String resourceTarget, PrintWriter w) {
+		String type = getParsedType(resourceTarget);
+		w.println("private "+type+" _"+resourceName+";");
 	}
 
-	private void addResourceDependency(String res, PrintWriter w,String prefix) {
-		w.println("void "+prefix+res+"(Object resource) {");
-		w.println("  this._"+res+" = resource;");
-		w.println("  "+prefix+"Resource(\""+res+"\",resource); ");
-		w.println("}\n");
+	private void addResourceDependency(String resourceName, String resourceTarget,  PrintWriter w, boolean set) {
+		String prefix = set?"set":"clear";
+		String type = getParsedType(resourceTarget);
+		w.println("  public void "+prefix+resourceName+"("+type+" resource) {");
+		w.println("    this._"+resourceName+" = "+(set?"resource":"null")+";");
+		w.println("    "+prefix+"Resource(\""+resourceName+"\",resource);");
+		w.println("  }\n");
 	}
 	
 
@@ -202,6 +202,7 @@ public class BundleBuilderComponent implements BundleBuilder {
 		w.print("Bundle-Name: "+name+"\r\n");
 		w.print("Bundle-RequiredExecutionEnvironment: JavaSE-1.6\r\n");
 		w.print("Bundle-ManifestVersion: 2\r\n");
+		w.print("DynamicImport-Package: *\r\n");
 		w.print("Bundle-ClassPath: .\r\n");
 		
 		StringBuffer sb = new StringBuffer();
@@ -227,7 +228,7 @@ public class BundleBuilderComponent implements BundleBuilder {
 		w.close();
 	}
 	
-	private void generateDs(String script, Set<String> dependentResources, String scriptInterface) throws IOException {
+	private void generateDs(String script, Map<String,String> annotations, String scriptInterface) throws IOException {
 		Writer writer = getOutputWriter( script, ".xml");
 
 		String fullName = "script."+script;
@@ -252,14 +253,16 @@ public class BundleBuilderComponent implements BundleBuilder {
 		property.setAttribute("type", "String");
 		property.setAttribute("value", script);
 		
-		for (String resource : dependentResources) {
+		for (Entry<String,String> entry: annotations.entrySet()) {
 			XMLElement dep = new CaseSensitiveXMLElement("reference");
-			dep.setAttribute("bind", "set"+resource);
-			dep.setAttribute("unbind", "clear"+resource);
+			dep.setAttribute("bind", "set"+entry.getKey());
+			dep.setAttribute("unbind", "clear"+entry.getKey());
+			dep.setAttribute("name", entry.getKey());
 			dep.setAttribute("policy", "static");
 			dep.setAttribute("cardinality", "1..1");
-			dep.setAttribute("interface", scriptInterface);
-			dep.setAttribute("target", "(navajo.resource.name="+resource+")");
+			String parsedType = getParsedType(entry.getValue());
+			dep.setAttribute("interface", parsedType);
+//			dep.setAttribute("target", entry.getValue());
 			xe.addChild(dep);
 		}
 //		PrintWriter w = new PrintWriter(getOutputWriter(getOutputPath(), script, ".xml"));
@@ -271,6 +274,20 @@ public class BundleBuilderComponent implements BundleBuilder {
 		w.close();
 	}
 	
+/*
+ * Try to find an appropriate type in the target, otherwise, default to object
+ */
+	private String getParsedType(String value) {
+		String stripped = value.substring(1,value.length()-1);
+		String[] elts = stripped.split(",");
+		for (String pair : elts) {
+			String[] keyval = pair.split("=");
+			if("objectClass".equals(keyval[0])) {
+				return keyval[1];
+			}
+		}
+		return Object.class.getName();
+	}
 
 	private File createBundleJar(String scriptPath,boolean keepIntermediateFiles, String extension) throws IOException {
 		String packagePath = "";
@@ -307,7 +324,6 @@ public class BundleBuilderComponent implements BundleBuilder {
 		}
 		File osgiinfScript = new File(osgiinf,"script.xml");
 		File metainfManifest = new File(metainf,"MANIFEST.MF");
-		System.err.println("bundlepackageDir: "+bundlePackageDir.getAbsolutePath());
 		if(!bundlePackageDir.exists()) {
 			bundlePackageDir.mkdirs();
 		}
